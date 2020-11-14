@@ -1,0 +1,882 @@
+#include "osc_scope.h"
+#include "stdio.h"
+#include "xil_printf.h"
+#include "../DMA/dma.h"
+#include "xsdps.h"
+#include "xparameters.h"
+#include "osc.h"
+
+/*******************define********************/
+#define CHART_LEFT 20
+#define CHART_TOP 50
+#define CHART_X 700
+#define CHART_Y 500
+#define CHART_BOTTOM 550
+#define BOTTOM_BUTTON_X 124
+#define BOTTOM_BUTTON_Y 35
+#define DIV_SMALL 10
+#define DIV_LARGE 20
+#define DIV_LITTLE 5
+#define CHANGE_MODE_H_OR_V_Y 100
+#define CHANGE_MODE_H_OR_V_X 130
+#define RIGHT_BUTTON_X 130
+#define RIGHT_BUTTON_Y 50
+#define ROLLER_Y 80
+#define ROLLER_X 130
+#define TABLE_X 280
+#define TABLE_Y 205
+#define TABLE_TOP 20
+#define TABLE_BIAS 40
+#define POINTS_NUM 100
+#define SCALE_5V 6
+#define SCALE_2V 2.4
+#define SCALE_1V 1.2
+#define BIAS_CH1 8
+#define BIAS_CH2 10
+
+/*******************define********************/
+
+/*******************objects********************/
+static lv_obj_t* vertical_cursor_slider;
+static lv_obj_t* horizenal_cursor_slider;
+static lv_obj_t* trigger_cursor_slider;
+static lv_obj_t* chart;
+static lv_obj_t* vertical_cursorA;
+static lv_obj_t* horizenal_cursorA;
+static lv_obj_t* vertical_cursorB;
+static lv_obj_t* horizenal_cursorB;
+static lv_obj_t* trigger_cursor;
+static lv_obj_t* label_vertical_cursor;
+static lv_obj_t* label_horizenal_cursor;
+static lv_obj_t* label_trigger_cursor;
+static lv_obj_t* button_trigger_mode;
+static lv_obj_t* button_V_cursor;
+static lv_obj_t* button_H_cursor;
+static lv_obj_t* button_FFT;
+static lv_obj_t* button_save;
+static lv_obj_t* button_single;
+static lv_obj_t* button_stop;
+static lv_obj_t* button_load;
+static lv_obj_t* button_run;
+static lv_obj_t* button_channel_one;
+static lv_obj_t* button_channel_two;
+static lv_obj_t* roller_vertical_div;
+static lv_obj_t* roller_horizenal_div;
+static lv_obj_t* table;
+static lv_obj_t * label_botton_V_Cursor;
+static lv_obj_t * label_botton_trigger;
+static lv_obj_t * label_botton_H_Cursor;
+static lv_obj_t * label_botton_fft;
+static lv_chart_series_t * ser1;
+static lv_chart_series_t * ser2;
+
+/*******************objects********************/
+
+/*******************Local********************/
+static int vertical_cursor_A_value = 0;
+static int horizenal_cursor_A_value = 0;
+static int vertical_cursor_B_value = 0;
+static int horizenal_cursor_B_value = 0;
+static int trigger_cursor_A_value = 0;
+static int vertical_cursor_switch = 0; // 0-A 1-B
+static int horizonal_cursor_switch = 0; // 0-A 1-B
+static int trigger_mode = 0; // 0-Up 1-Down
+static lv_point_t vertical_cursor_A_points[] = { {CHART_LEFT, CHART_TOP+CHART_Y}, {CHART_LEFT+CHART_X, CHART_TOP+CHART_Y}};
+static lv_point_t horizenal_cursor_A_points[] = { {CHART_LEFT, CHART_TOP}, {CHART_LEFT, CHART_Y+CHART_TOP}};
+static lv_point_t vertical_cursor_B_points[] = { {CHART_LEFT, CHART_TOP+CHART_Y}, {CHART_LEFT+CHART_X, CHART_TOP+CHART_Y}};
+static lv_point_t horizenal_cursor_B_points[] = { {CHART_LEFT, CHART_TOP}, {CHART_LEFT, CHART_Y+CHART_TOP}};
+static lv_point_t trigger_cursor_A_points[] = { {CHART_LEFT, CHART_TOP+250}, {CHART_X+CHART_LEFT, CHART_TOP+250}};
+static int vertical_mode = 2;   //  鍨傜洿妗ｄ綅, 0-0.1V/div; 1-0.2V/div; 2-0.5V/div
+static int horizonal_mode = 0;   //  姘村钩妗ｄ綅, 0-1us/div; 浠ユ绫绘帹
+static double vertical_cursor_A_value_show = 0.50;  //  鍨傜洿鍏夋爣A鐨勫綋鍓嶅��
+static double horizenal_cursor_A_value_show = 0.00;  //  姘村钩鍏夋爣A鐨勫綋鍓嶅��
+static double vertical_cursor_B_value_show = 0.50;  //  鍨傜洿鍏夋爣B鐨勫綋鍓嶅��
+static double horizenal_cursor_B_value_show = 0.00;  //  姘村钩鍏夋爣B鐨勫綋鍓嶅��
+static double vertical_cursor_Diff_value_show = 0.00;  //  鍨傜洿鍏夋爣A鐨勫樊鍊�
+static double horizenal_cursor_Diff_value_show = 0.00;  //  姘村钩鍏夋爣A鐨勫樊鍊�
+static char* vertical_cursor_A_string = "0.000";
+static char* horizenal_cursor_A_string = "0.000";
+static char* vertical_cursor_B_string = "0.000";
+static char* horizenal_cursor_B_string = "0.000";
+static char* vertical_cursor_diff_string = "0.000";
+static char* horizenal_cursor_diff_string = "0.000";
+static char* frequency_string = "0.000";
+static char* vpp_string = "0.000";
+static char* vrms_string = "0.000";
+static char* vave_string = "0.000";
+static char* channel_show = "CH1";
+static lv_coord_t points_array_channel1[POINTS_NUM];
+static lv_coord_t points_array_channel2[POINTS_NUM];
+static int stop_sampling = 0;
+static int channel_select = 0; // 0-channel1; 1-channel2
+static u32 trigger_reg = 0;
+static int trigger_channel = 0;	// 0-channe1; 1-channel2
+
+/*******************Local********************/
+
+/*******************emmc********************/
+static XSdPs ps7_EMMC;
+XSdPs_Config * EMMC_Config;
+u8 WR_Buf[1024];
+u8 RD_Buf[1024];
+u8 Emmc_ExtCsd[1024];
+
+/*******************emmc********************/
+
+/*******************Global Flag********************/
+
+static int test_flag_counter = 0;
+
+/*******************Global Flag********************/
+
+/*******************font style********************/
+static lv_style_t style_font_cursor_label;
+
+/*******************font style********************/
+
+/*******************line style********************/
+static lv_style_t style_vertical_cursor;
+static lv_style_t style_horizontal_cursor;
+static lv_style_t style_trigger_cursor;
+
+/*******************line style********************/
+
+/*******************chart style********************/
+static lv_style_t style_chart;
+
+/*******************chart style********************/
+
+/*******************slider style********************/
+static lv_style_t style_bg;
+static lv_style_t style_indic;
+static lv_style_t style_knob;
+
+/*******************slider style********************/
+
+/*******************Button style********************/
+
+/*******************Button style********************/
+
+/*******************Table style********************/
+static lv_style_t style_normal_cell;
+static lv_style_t style_header_cell;
+
+/*******************Initialize emmc********************/
+static int initialize_emmc(void){
+	s32 Status;
+    EMMC_Config= XSdPs_LookupConfig(XPAR_PS7_SD_1_DEVICE_ID);
+    Status = XSdPs_CfgInitialize(&ps7_EMMC, EMMC_Config, EMMC_Config->BaseAddress);
+    if (Status != XST_SUCCESS)
+    {
+         xil_printf("EMMC Config failed !\n\r");
+         return XST_FAILURE;
+    }
+    Status=XSdPs_MmcCardInitialize(&ps7_EMMC);
+    if (Status != XST_SUCCESS)
+    {
+    	 xil_printf("EMMC Config failed !\n\r");
+         return XST_FAILURE;
+    }
+    Status=XSdPs_Change_ClkFreq(&ps7_EMMC,50000000);
+    Status=XSdPs_Select_Card(&ps7_EMMC);
+    Status=XSdPs_SetBlkSize(&ps7_EMMC,XSDPS_BLK_SIZE_512_MASK);
+    Status=XSdPs_Get_Mmc_ExtCsd(&ps7_EMMC,Emmc_ExtCsd);
+    return XST_SUCCESS;
+}
+/*******************Initialize emmc********************/
+
+/*******************Table style********************/
+
+/*******************Initialize the styles********************/
+static void initialize_styles(void){
+	// sliders for cursor
+    lv_style_copy(&style_bg, &lv_style_pretty);
+    style_bg.body.main_color =  LV_COLOR_BLACK;
+    style_bg.body.grad_color =  LV_COLOR_GRAY;
+    style_bg.body.radius = LV_RADIUS_CIRCLE;
+    style_bg.body.border.color = LV_COLOR_WHITE;
+
+    lv_style_copy(&style_indic, &lv_style_pretty_color);
+    style_indic.body.radius = LV_RADIUS_CIRCLE;
+    style_indic.body.shadow.width = 8;
+    style_indic.body.shadow.color = style_indic.body.main_color;
+    style_indic.body.padding.left = 3;
+    style_indic.body.padding.right = 3;
+    style_indic.body.padding.top = 3;
+    style_indic.body.padding.bottom = 3;
+
+    lv_style_copy(&style_knob, &lv_style_pretty);
+    style_knob.body.radius = LV_RADIUS_CIRCLE;
+    style_knob.body.opa = LV_OPA_70;
+    style_knob.body.padding.top = 10 ;
+    style_knob.body.padding.bottom = 10 ;
+
+    // cursor lines
+    lv_style_copy(&style_vertical_cursor, &lv_style_plain);
+    style_vertical_cursor.line.color = LV_COLOR_YELLOW;
+    style_vertical_cursor.line.width = 1;
+    style_vertical_cursor.line.rounded = 1;
+
+    lv_style_copy(&style_horizontal_cursor, &lv_style_plain);
+    style_horizontal_cursor.line.color = LV_COLOR_YELLOW;
+    style_horizontal_cursor.line.width = 1;
+    style_horizontal_cursor.line.rounded = 1;
+
+    lv_style_copy(&style_trigger_cursor, &lv_style_plain);
+    style_trigger_cursor.line.color = LV_COLOR_WHITE;
+    style_trigger_cursor.line.width = 1;
+    style_trigger_cursor.line.rounded = 1;
+
+    // chart
+    lv_style_copy(&style_chart, &lv_style_pretty);
+    style_chart.body.main_color = LV_COLOR_BLACK;
+    style_chart.body.grad_color = LV_COLOR_BLACK;
+
+    // font
+    style_font_cursor_label.text.color = LV_COLOR_BLUE;
+
+    // table
+    lv_style_copy(&style_normal_cell, &lv_style_plain);
+    style_normal_cell.body.border.width = 1;
+    style_normal_cell.body.border.color = LV_COLOR_BLACK;
+
+    lv_style_copy(&style_header_cell, &lv_style_plain);
+    style_header_cell.body.border.width = 1;
+    style_header_cell.body.border.color = LV_COLOR_BLACK;
+    style_header_cell.body.main_color = LV_COLOR_SILVER;
+    style_header_cell.body.grad_color = LV_COLOR_SILVER;
+
+
+}
+/*******************Initialize the styles********************/
+
+/*******************handler********************/
+
+static void vertical_cursor_slider_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_VALUE_CHANGED) {
+    	int slide_value = 0;
+    	slide_value = lv_slider_get_value(obj);
+    	if(vertical_cursor_switch == 0){
+       		vertical_cursor_A_value = CHART_BOTTOM - slide_value * 5;
+       		vertical_cursor_A_points[0].y = vertical_cursor_A_value;
+       		vertical_cursor_A_points[1].y = vertical_cursor_A_value;
+       		lv_line_set_points(vertical_cursorA, vertical_cursor_A_points, 2);     /*Set the points*/
+            vertical_cursor_A_value_show = (vertical_mode == 0)?(-0.500+slide_value/100):(vertical_mode == 1)?(-1.00+slide_value*2/100):(-2.50+slide_value*5/100);
+            sprintf(vertical_cursor_A_string,"%.3lf",vertical_cursor_A_value_show);
+            lv_table_set_cell_value(table, 5, 1, vertical_cursor_A_string);
+    	}
+    	else{
+       		vertical_cursor_B_value = CHART_BOTTOM - slide_value * 5;
+       		vertical_cursor_B_points[0].y = vertical_cursor_B_value;
+       		vertical_cursor_B_points[1].y = vertical_cursor_B_value;
+       		lv_line_set_points(vertical_cursorB, vertical_cursor_B_points, 2);     /*Set the points*/
+            vertical_cursor_B_value_show = (vertical_mode == 0)?(-0.500+slide_value/100):(vertical_mode == 1)?(-1.000+slide_value*2/100):(-2.50+slide_value*5/100);
+            sprintf(vertical_cursor_B_string,"%.3lf",vertical_cursor_B_value_show);
+            lv_table_set_cell_value(table, 6, 1, vertical_cursor_B_string);
+    	}
+    	vertical_cursor_Diff_value_show = vertical_cursor_A_value_show - vertical_cursor_B_value_show;
+        sprintf(vertical_cursor_diff_string,"%.3lf",vertical_cursor_Diff_value_show);
+        lv_table_set_cell_value(table, 9, 1, vertical_cursor_diff_string);
+    }
+}
+
+static void horizenal_cursor_slider_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_VALUE_CHANGED) {
+    	int slide_value = 0;
+    	slide_value = lv_slider_get_value(obj);
+    	if(vertical_cursor_switch == 0){
+       		horizenal_cursor_A_value = slide_value + CHART_LEFT;
+       		horizenal_cursor_A_points[0].x = horizenal_cursor_A_value;
+       		horizenal_cursor_A_points[1].x = horizenal_cursor_A_value;
+       		lv_line_set_points(horizenal_cursorA, horizenal_cursor_A_points, 2);     /*Set the points*/
+            horizenal_cursor_A_value_show = (horizonal_mode == 0)?(0.014*slide_value):(horizonal_mode == 1)?(0.036*slide_value):(horizonal_mode == 2)?
+            		(0.071*slide_value):(horizonal_mode == 3)?(0.143*slide_value):(horizonal_mode == 4)?(0.357*slide_value):(0.714*slide_value);
+            sprintf(horizenal_cursor_A_string,"%.3lf",horizenal_cursor_A_value_show);
+            lv_table_set_cell_value(table, 7, 1, horizenal_cursor_A_string);
+    	}
+    	else{
+       		horizenal_cursor_B_value = slide_value + CHART_LEFT;
+       		horizenal_cursor_B_points[0].x = horizenal_cursor_B_value;
+       		horizenal_cursor_B_points[1].x = horizenal_cursor_B_value;
+       		lv_line_set_points(horizenal_cursorB, horizenal_cursor_B_points, 2);     /*Set the points*/
+            horizenal_cursor_B_value_show = (horizonal_mode == 0)?(0.014*slide_value):(horizonal_mode == 1)?(0.036*slide_value):(horizonal_mode == 2)?
+            		(0.071*slide_value):(horizonal_mode == 3)?(0.143*slide_value):(horizonal_mode == 4)?(0.357*slide_value):(0.714*slide_value);
+            sprintf(horizenal_cursor_B_string,"%.3lf",horizenal_cursor_B_value_show);
+            lv_table_set_cell_value(table, 8, 1, horizenal_cursor_B_string);
+    	}
+    	horizenal_cursor_Diff_value_show = horizenal_cursor_A_value_show - horizenal_cursor_B_value_show;
+        sprintf(horizenal_cursor_diff_string,"%.3lf",horizenal_cursor_Diff_value_show);
+        lv_table_set_cell_value(table, 10, 1, horizenal_cursor_diff_string);
+    }
+}
+
+static void trigger_cursor_slider_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_VALUE_CHANGED) {
+    	int slide_value = 0;
+    	signed char trigger_value = 0;
+    	slide_value = lv_slider_get_value(obj);
+   		trigger_cursor_A_value = CHART_BOTTOM- slide_value;
+   		trigger_cursor_A_points[0].y = trigger_cursor_A_value;
+   		trigger_cursor_A_points[1].y = trigger_cursor_A_value;
+   		lv_line_set_points(trigger_cursor, trigger_cursor_A_points, 2);     /*Set the points*/
+    	/**灏嗚Е鍙戠數骞充紶閫掔粰搴曞眰閫昏緫**/
+   		trigger_value = (signed char)(slide_value * 256 / 100 - 128);
+   		OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG3_OFFSET, trigger_value); // trigger level
+    	/**灏嗚Е鍙戠數骞充紶閫掔粰搴曞眰閫昏緫**/
+    }
+}
+
+static void vertical_roller_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_VALUE_CHANGED) {
+    	int mode;
+    	vertical_mode = lv_roller_get_selected(obj);
+    	/**灏嗗瀭鐩存。浣嶄紶閫掔粰搴曞眰閫昏緫**/
+    	mode = (vertical_mode == 0)?2:(vertical_mode == 2)?0:1;
+    	if(channel_select == 0){
+        	OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG6_OFFSET, mode); // channel1
+    	}
+    	else{
+        	OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG7_OFFSET, mode); // channel1
+    	}
+    	/**灏嗗瀭鐩存。浣嶄紶閫掔粰搴曞眰閫昏緫**/
+    }
+}
+
+static void horizonal_roller_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_VALUE_CHANGED) {
+    	int mode;
+    	horizonal_mode = lv_roller_get_selected(obj);
+    	/**灏嗘按骞虫。浣嶄紶閫掔粰搴曞眰閫昏緫**/
+    	mode = horizonal_mode;
+    	OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG2_OFFSET, mode); // horizon, default 1us
+    	/**灏嗘按骞虫。浣嶄紶閫掔粰搴曞眰閫昏緫**/
+    }
+}
+
+static void button_vertical_cursor_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	vertical_cursor_switch = (vertical_cursor_switch == 0)?1:0;
+    	if(vertical_cursor_switch == 0)	lv_label_set_text(label_botton_V_Cursor, "V-cursor-A");
+    	else lv_label_set_text(label_botton_V_Cursor, "V-cursor-B");
+    }
+}
+
+static void button_horizonal_cursor_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	horizonal_cursor_switch = (horizonal_cursor_switch == 0)?1:0;
+    	if(horizonal_cursor_switch == 0)	lv_label_set_text(label_botton_H_Cursor, "H-cursor-A");
+    	else lv_label_set_text(label_botton_H_Cursor, "H-cursor-B");
+    }
+}
+
+static void button_trigger_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	trigger_mode = (trigger_mode == 0)?1:0;
+    	/**灏嗚Е鍙戞部妯″紡浼犻�掔粰搴曞眰閫昏緫**/
+    	if(trigger_mode == 0){
+    		lv_label_set_text(label_botton_trigger, "Trigger-Pos");
+			OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG1_OFFSET, trigger_reg & 0x00000001); // pos
+    	}
+    	else{
+    		lv_label_set_text(label_botton_trigger, "Trigger-Neg");
+			OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG1_OFFSET, trigger_reg | 0x00000002); // neg
+    	}
+    	/**灏嗚Е鍙戞部妯″紡浼犻�掔粰搴曞眰閫昏緫**/
+    }
+}
+
+static void button_stop_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	if(stop_sampling == 0){
+    		stop_sampling = 1;
+    	}
+    	else return ;
+    }
+}
+
+static void button_single_sample_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	if(stop_sampling == 0){
+    		stop_sampling = 1;
+    	}
+    	else return ;
+    }
+}
+
+static void button_run_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	if(stop_sampling == 1){
+    		stop_sampling = 0;
+    	}
+    	else return ;
+    }
+}
+
+static void button_save_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	int Status;
+		stop_sampling = 1;
+		for(int i = 0; i < 100; i ++){
+			WR_Buf[i] = points_array_channel1[i];
+		}
+	    Status = XSdPs_WritePolled(&ps7_EMMC, 0x00, 2, WR_Buf);
+		if(Status == XST_FAILURE){
+			xil_printf("Fail to write emmc");
+			return ;
+		}
+		stop_sampling = 0;
+    }
+}
+
+static void button_load_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	int Status;
+		stop_sampling = 1;
+	    Status = XSdPs_ReadPolled(&ps7_EMMC, 0x00, 2, RD_Buf);
+		if(Status == XST_FAILURE){
+			xil_printf("Fail to read emmc");
+			return ;
+		}
+		for(int i = 0; i < 100; i ++){
+			points_array_channel1[i] = RD_Buf[i];
+		}
+		lv_chart_set_points(chart,ser1,points_array_channel1);
+    }
+}
+
+static void button_channel1_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	channel_select = 0;
+        lv_table_set_cell_value(table, 0, 1, "CH1");
+    }
+}
+
+static void button_channel2_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	channel_select = 1;
+        lv_table_set_cell_value(table, 0, 1, "CH2");
+    }
+}
+
+static void button_Triggerchannel_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+    	trigger_channel = (trigger_channel == 1) ? 0 : 1;
+    	if(trigger_channel == 0){
+    		lv_label_set_text(label_botton_fft, "Trigger CH1");
+			OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG1_OFFSET, trigger_reg & 0x00000002); // pos
+    	}
+    	else{
+    		lv_label_set_text(label_botton_fft, "Trigger CH2");
+			OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG1_OFFSET, trigger_reg | 0x00000001); // pos
+    	}
+    }
+}
+
+/*******************handler********************/
+
+/*******************tasks********************/
+void update_osc_task(lv_task_t * task)
+{
+  /*500ms鏇存柊涓�娆℃尝褰�*/
+  /*Do something with LittlevGL*/
+	if(stop_sampling == 0){
+		int Status;
+		int i = 0;
+		u32 reg8,reg9,reg10,reg11;
+		short summary1 = 0;
+		short summary2 = 0;
+		double channel1_freq, channel2_freq;
+		double vpp = 0.000;
+		double vrms = 0.000;
+		double vave = 0.000;
+		signed char vmax1 = 0;
+		signed char vmin1 = 0;
+		signed char vmax2 = 0;
+		signed char vmin2 = 0;
+
+		OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG0_OFFSET, 1);	// start
+		OSC_mWriteReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG0_OFFSET, 0);	// reset
+		u32 *ADC_RxBufferPtr=(u32 *)ADC_RX_BUFFER_BASE;
+		Status = XAxiDma_SimpleTransfer(&ADC_AxiDma,(u32)ADC_RxBufferPtr,
+				(u32)(MAX_PKT_LEN), XAXIDMA_DEVICE_TO_DMA);
+		if (Status != XST_SUCCESS) {xil_printf("fail!\r\n"); return ;}
+		while((XAxiDma_Busy(&ADC_AxiDma,XAXIDMA_DEVICE_TO_DMA)));
+		Xil_DCacheFlushRange((UINTPTR) ADC_RxBufferPtr, 101*4);
+
+		for(i = 0; i < 100; i ++){
+			points_array_channel1[i] = ((lv_coord_t)(((signed char)(ADC_RxBufferPtr[i]) + 128) * 100 * SCALE_1V / 256) - BIAS_CH1);
+			points_array_channel2[i] = ((lv_coord_t)(((signed char)(ADC_RxBufferPtr[i] >> 8) + 128) * 100 * SCALE_1V / 256) - BIAS_CH2);
+			if((signed char)(ADC_RxBufferPtr[i]) > vmax1){
+				vmax1 = (signed char)(ADC_RxBufferPtr[i]);
+			}
+			if((signed char)(ADC_RxBufferPtr[i]) < vmin1){
+				vmin1 = (signed char)(ADC_RxBufferPtr[i]);
+			}
+			summary1 += (signed char)(ADC_RxBufferPtr[i]);
+			if((signed char)(ADC_RxBufferPtr[i] >> 8) > vmax2){
+				vmax2 = (signed char)(ADC_RxBufferPtr[i] >> 8);
+			}
+			if((signed char)(ADC_RxBufferPtr[i] >> 8) < vmin2){
+				vmin2 = (signed char)(ADC_RxBufferPtr[i] >> 8);
+			}
+			summary2 += (signed char)(ADC_RxBufferPtr[i] >> 8);
+		}
+
+		lv_chart_set_points(chart,ser1,points_array_channel1);
+		lv_chart_set_points(chart,ser2,points_array_channel2);
+
+		reg8 = OSC_mReadReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG8_OFFSET);
+		reg9 = OSC_mReadReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG9_OFFSET);
+		reg10 = OSC_mReadReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG10_OFFSET);
+		reg11 = OSC_mReadReg(XPAR_OSC_0_S00_AXI_BASEADDR, OSC_S00_AXI_SLV_REG11_OFFSET);
+
+		channel1_freq = (double)100000.0 * (double)reg8 / (double)reg9;	// kHz
+		channel2_freq = (double)100000.0 * (double)reg10 / (double)reg11;	// kHz
+
+		if(channel_select == 0){
+			sprintf(frequency_string, "%.3lf", channel1_freq);
+		}
+		else{
+			sprintf(frequency_string, "%.3lf", channel2_freq);
+		}
+        lv_table_set_cell_value(table, 4, 1, horizenal_cursor_diff_string);
+
+        if(channel_select == 0){
+        	lv_table_set_cell_value(table, 0, 1, "CH1");
+            vpp = (vertical_mode == 0)?((double)(vmax1-vmin1)*SCALE_1V/256):(vertical_mode == 1)?
+            		((double)(vmax1-vmin1)*SCALE_2V/256):((double)(vmax1-vmin1)*SCALE_5V/256);
+    		sprintf(vpp_string, "%.3lf", vpp);
+            lv_table_set_cell_value(table, 1, 1, vpp_string);
+            vrms = vpp / 2.828;
+            sprintf(vrms_string, "%.3lf", vrms);
+            lv_table_set_cell_value(table, 2, 1, vrms_string);
+            vave = (double)(summary1 / 100) + 6.5;
+            sprintf(vave_string, "%.3lf", vave);
+            lv_table_set_cell_value(table, 3, 1, vave_string);
+        }
+        else{
+        	lv_table_set_cell_value(table, 0, 1, "CH1");
+            vpp = (vertical_mode == 0)?((double)(vmax2-vmin2)*SCALE_1V/256):(vertical_mode == 1)?
+            		((double)(vmax2-vmin2)*SCALE_2V/256):((double)(vmax2-vmin2)*SCALE_5V/256);
+    		sprintf(vpp_string, "%.3lf", vpp);
+            lv_table_set_cell_value(table, 1, 1, vpp_string);
+            vrms = vpp / 2.828;
+            sprintf(vrms_string, "%.3lf", vrms);
+            lv_table_set_cell_value(table, 2, 1, vrms_string);
+            vave = (double)(summary2 / 100) + 6.8;
+            sprintf(vave_string, "%.3lf", vave);
+            lv_table_set_cell_value(table, 3, 1, vave_string);
+        }
+
+	}
+	else return ;
+}
+
+/*******************tasks********************/
+
+/*******************UI********************/
+void osc_scope_ui(void){
+
+	// initialize the styles
+	initialize_styles();
+	// initialize the emmc
+	initialize_emmc();
+	// cursor sliders
+	vertical_cursor_slider = lv_slider_create(lv_scr_act(), NULL);
+    lv_slider_set_style(vertical_cursor_slider, LV_SLIDER_STYLE_BG, &style_bg);
+    lv_slider_set_style(vertical_cursor_slider, LV_SLIDER_STYLE_INDIC,&style_indic);
+    lv_slider_set_style(vertical_cursor_slider, LV_SLIDER_STYLE_KNOB, &style_knob);
+    lv_obj_set_pos(vertical_cursor_slider,40,10);
+    lv_slider_set_range(vertical_cursor_slider, 0, 100);
+    lv_obj_set_event_cb(vertical_cursor_slider, vertical_cursor_slider_event_handler);
+
+    horizenal_cursor_slider = lv_slider_create(lv_scr_act(), NULL);
+    lv_slider_set_style(horizenal_cursor_slider, LV_SLIDER_STYLE_BG, &style_bg);
+    lv_slider_set_style(horizenal_cursor_slider, LV_SLIDER_STYLE_INDIC,&style_indic);
+    lv_slider_set_style(horizenal_cursor_slider, LV_SLIDER_STYLE_KNOB, &style_knob);
+    lv_obj_set_pos(horizenal_cursor_slider,280,10);
+    lv_slider_set_range(horizenal_cursor_slider, 0, CHART_X);
+    lv_obj_set_event_cb(horizenal_cursor_slider, horizenal_cursor_slider_event_handler);
+
+    trigger_cursor_slider = lv_slider_create(lv_scr_act(), NULL);
+    lv_slider_set_style(trigger_cursor_slider, LV_SLIDER_STYLE_BG, &style_bg);
+    lv_slider_set_style(trigger_cursor_slider, LV_SLIDER_STYLE_INDIC,&style_indic);
+    lv_slider_set_style(trigger_cursor_slider, LV_SLIDER_STYLE_KNOB, &style_knob);
+    lv_obj_set_pos(trigger_cursor_slider,520,10);
+    lv_slider_set_range(trigger_cursor_slider, 0, CHART_Y);
+    lv_slider_set_value(trigger_cursor_slider,50,LV_ANIM_OFF);
+    lv_obj_set_event_cb(trigger_cursor_slider, trigger_cursor_slider_event_handler);
+
+    // chart
+    /*Create a chart*/
+    chart = lv_chart_create(lv_scr_act(), NULL);
+    lv_chart_set_style(chart, LV_CHART_STYLE_MAIN, &style_chart);
+    lv_obj_set_size(chart, CHART_X, CHART_Y);
+    lv_obj_set_pos(chart, CHART_LEFT, CHART_TOP);
+    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);   /*Show lines and points too*/
+    lv_chart_set_series_opa(chart, LV_OPA_70);                            /*Opacity of the data series*/
+    lv_chart_set_series_width(chart, 6);                                  /*Line width and point radious*/
+    lv_chart_set_div_line_count(chart, 9, 9);
+    lv_chart_set_range(chart, 0, 100);
+    lv_chart_set_point_count(chart, 100);
+
+    /*Add two data series*/
+    ser1 = lv_chart_add_series(chart, LV_COLOR_YELLOW);
+    ser2 = lv_chart_add_series(chart, LV_COLOR_BLUE);
+
+    /*Set the next points on 'dl1'*/
+    lv_chart_set_next(chart, ser1, 10);
+    lv_chart_set_next(chart, ser1, 20);
+    lv_chart_set_next(chart, ser1, 30);
+    lv_chart_set_next(chart, ser1, 40);
+    lv_chart_set_next(chart, ser1, 50);
+    lv_chart_set_next(chart, ser1, 40);
+    lv_chart_set_next(chart, ser1, 30);
+    lv_chart_set_next(chart, ser1, 20);
+    lv_chart_set_next(chart, ser1, 10);
+    lv_chart_set_next(chart, ser1, 20);
+
+    /*Directly set points on 'dl2'*/
+    ser2->points[0] = 90;
+    ser2->points[1] = 70;
+    ser2->points[2] = 50;
+    ser2->points[3] = 30;
+    ser2->points[4] = 10;
+    ser2->points[5] = 30;
+    ser2->points[6] = 50;
+    ser2->points[7] = 70;
+    ser2->points[8] = 90;
+    ser2->points[9] = 70;
+
+    // cursor lines
+    vertical_cursorA = lv_line_create(lv_scr_act(), NULL);
+    lv_line_set_style(vertical_cursorA, LV_LINE_STYLE_MAIN, &style_vertical_cursor);
+    lv_line_set_points(vertical_cursorA, vertical_cursor_A_points, 2);     /*Set the points*/
+
+    horizenal_cursorA = lv_line_create(lv_scr_act(), NULL);
+    lv_line_set_style(horizenal_cursorA, LV_LINE_STYLE_MAIN, &style_horizontal_cursor);
+    lv_line_set_points(horizenal_cursorA, horizenal_cursor_A_points, 2);     /*Set the points*/
+
+    vertical_cursorB = lv_line_create(lv_scr_act(), NULL);
+    lv_line_set_style(vertical_cursorB, LV_LINE_STYLE_MAIN, &style_vertical_cursor);
+    lv_line_set_points(vertical_cursorB, vertical_cursor_A_points, 2);     /*Set the points*/
+
+    horizenal_cursorB = lv_line_create(lv_scr_act(), NULL);
+    lv_line_set_style(horizenal_cursorB, LV_LINE_STYLE_MAIN, &style_horizontal_cursor);
+    lv_line_set_points(horizenal_cursorB, horizenal_cursor_A_points, 2);     /*Set the points*/
+
+    trigger_cursor = lv_line_create(lv_scr_act(), NULL);
+    lv_line_set_style(trigger_cursor, LV_LINE_STYLE_MAIN, &style_trigger_cursor);
+    lv_line_set_points(trigger_cursor, trigger_cursor_A_points, 2);     /*Set the points*/
+
+    // cursor labels
+    label_vertical_cursor = lv_label_create(lv_scr_act(), NULL);
+//    lv_label_set_style(label_vertical_cursor, LV_LABEL_STYLE_MAIN, &style_font_cursor_label);
+	lv_label_set_text(label_vertical_cursor, "Ver");
+	lv_obj_set_pos(label_vertical_cursor, 1, 15);
+
+	label_horizenal_cursor = lv_label_create(lv_scr_act(), NULL);
+//    lv_label_set_style(label_horizenal_cursor, LV_LABEL_STYLE_MAIN, &style_font_cursor_label);
+	lv_label_set_text(label_horizenal_cursor, "Hor");
+	lv_obj_set_pos(label_horizenal_cursor, 238, 15);
+
+	label_trigger_cursor = lv_label_create(lv_scr_act(), NULL);
+//    lv_label_set_style(label_trigger_cursor, LV_LABEL_STYLE_MAIN, &style_font_cursor_label);
+	lv_label_set_text(label_trigger_cursor, "Trig");
+	lv_obj_set_pos(label_trigger_cursor, 480, 15);
+
+	// Buttons in the bottom
+	// Trigger
+    button_trigger_mode = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_event_cb(button_trigger_mode, button_trigger_event_handler);
+    lv_obj_set_size(button_trigger_mode, BOTTOM_BUTTON_X, BOTTOM_BUTTON_Y);
+    lv_obj_set_pos(button_trigger_mode, CHART_LEFT, CHART_TOP + CHART_Y + DIV_SMALL);
+    label_botton_trigger = lv_label_create(button_trigger_mode, NULL);
+    lv_label_set_text(label_botton_trigger, "Trigger-Pos");
+
+    // V-Cursor
+    button_V_cursor = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_size(button_V_cursor, BOTTOM_BUTTON_X, BOTTOM_BUTTON_Y);
+    lv_obj_set_pos(button_V_cursor, CHART_LEFT + BOTTOM_BUTTON_X + DIV_LARGE, CHART_TOP + CHART_Y + DIV_SMALL);
+    label_botton_V_Cursor = lv_label_create(button_V_cursor, NULL);
+    lv_label_set_text(label_botton_V_Cursor, "V-cursor-A");
+    lv_obj_set_event_cb(button_V_cursor, button_vertical_cursor_event_handler);
+
+    // H-Cursor
+    button_H_cursor = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_size(button_H_cursor, BOTTOM_BUTTON_X, BOTTOM_BUTTON_Y);
+    lv_obj_set_pos(button_H_cursor, CHART_LEFT + 2*BOTTOM_BUTTON_X + 2*DIV_LARGE, CHART_TOP + CHART_Y + DIV_SMALL);
+    label_botton_H_Cursor = lv_label_create(button_H_cursor, NULL);
+    lv_label_set_text(label_botton_H_Cursor, "H-cursor-A");
+    lv_obj_set_event_cb(button_H_cursor, button_horizonal_cursor_event_handler);
+
+    // Trigger channel
+    button_FFT = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_event_cb(button_FFT, button_Triggerchannel_event_handler);
+    lv_obj_set_size(button_FFT, BOTTOM_BUTTON_X, BOTTOM_BUTTON_Y);
+    lv_obj_set_pos(button_FFT, CHART_LEFT + 3*BOTTOM_BUTTON_X + 3*DIV_LARGE, CHART_TOP + CHART_Y + DIV_SMALL);
+    label_botton_fft = lv_label_create(button_FFT, NULL);
+    lv_label_set_text(label_botton_fft, "Trigger CH1");
+
+    // Save
+    lv_obj_t * label_botton_save;
+    button_save = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_event_cb(button_save, button_save_event_handler);
+    lv_obj_set_size(button_save, BOTTOM_BUTTON_X, BOTTOM_BUTTON_Y);
+    lv_obj_set_pos(button_save, CHART_LEFT + 4*BOTTOM_BUTTON_X + 4*DIV_LARGE, CHART_TOP + CHART_Y + DIV_SMALL);
+    label_botton_save = lv_label_create(button_save, NULL);
+    lv_label_set_text(label_botton_save, "Save");
+
+	// Buttons in the right side
+	// Single
+    lv_obj_t * label_botton_single;
+    button_single = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_event_cb(button_single, button_single_sample_event_handler);
+    lv_obj_set_size(button_single, RIGHT_BUTTON_X, RIGHT_BUTTON_Y);
+    lv_obj_set_pos(button_single, CHART_LEFT + CHART_X + DIV_LARGE, 600-(DIV_LITTLE + ROLLER_Y + 3*DIV_SMALL + 3*RIGHT_BUTTON_Y));
+    label_botton_single = lv_label_create(button_single, NULL);
+    lv_label_set_text(label_botton_single, "Single");
+
+	// Stop
+    lv_obj_t * label_botton_stop;
+    button_stop = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_event_cb(button_stop, button_stop_event_handler);
+    lv_obj_set_size(button_stop, RIGHT_BUTTON_X, RIGHT_BUTTON_Y);
+    lv_obj_set_pos(button_stop, CHART_LEFT + CHART_X + 2*DIV_LARGE + RIGHT_BUTTON_X, 600-(DIV_LITTLE + ROLLER_Y + 3*DIV_SMALL + 3*RIGHT_BUTTON_Y));
+    label_botton_stop = lv_label_create(button_stop, NULL);
+    lv_label_set_text(label_botton_stop, "Stop");
+
+	// Load
+    lv_obj_t * label_botton_load;
+    button_load = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_event_cb(button_load, button_load_event_handler);
+    lv_obj_set_size(button_load, RIGHT_BUTTON_X, RIGHT_BUTTON_Y);
+    lv_obj_set_pos(button_load, CHART_LEFT + CHART_X + DIV_LARGE, 600-(DIV_LITTLE + ROLLER_Y + 2*DIV_SMALL + 2*RIGHT_BUTTON_Y));
+    label_botton_load = lv_label_create(button_load, NULL);
+    lv_label_set_text(label_botton_load, "Load");
+
+	// Run
+    lv_obj_t * label_botton_run;
+    button_run = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_event_cb(button_run, button_run_event_handler);
+    lv_obj_set_size(button_run, RIGHT_BUTTON_X, RIGHT_BUTTON_Y);
+    lv_obj_set_pos(button_run, CHART_LEFT + CHART_X + 2*DIV_LARGE + RIGHT_BUTTON_X, 600-(DIV_LITTLE + ROLLER_Y + 2*DIV_SMALL + 2*RIGHT_BUTTON_Y));
+    label_botton_run = lv_label_create(button_run, NULL);
+    lv_label_set_text(label_botton_run, "Run");
+
+	// Channel 1
+    lv_obj_t * label_botton_channel1;
+    button_channel_one = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_event_cb(button_channel_one, button_channel1_event_handler);
+    lv_obj_set_size(button_channel_one, RIGHT_BUTTON_X, RIGHT_BUTTON_Y);
+    lv_obj_set_pos(button_channel_one, CHART_LEFT + CHART_X + DIV_LARGE, 600-(DIV_LITTLE + ROLLER_Y + DIV_SMALL + RIGHT_BUTTON_Y));
+    label_botton_channel1 = lv_label_create(button_channel_one, NULL);
+    lv_label_set_text(label_botton_channel1, "CH1");
+
+	// Channel 2
+    lv_obj_t * label_botton_channel2;
+    button_channel_two = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_event_cb(button_channel_two, button_channel2_event_handler);
+    lv_obj_set_size(button_channel_two, RIGHT_BUTTON_X, RIGHT_BUTTON_Y);
+    lv_obj_set_pos(button_channel_two, CHART_LEFT + CHART_X + 2*DIV_LARGE + RIGHT_BUTTON_X, 600-(DIV_LITTLE + ROLLER_Y + DIV_SMALL + RIGHT_BUTTON_Y));
+    label_botton_channel2 = lv_label_create(button_channel_two, NULL);
+    lv_label_set_text(label_botton_channel2, "CH2");
+
+    // Vertical division
+    roller_vertical_div = lv_roller_create(lv_scr_act(), NULL);
+    lv_roller_set_options(roller_vertical_div,
+                        "0.1V/div               \n"
+                        "0.2V/div               \n"
+                        "0.5V/div               ",
+						LV_ROLLER_MODE_NORMAL);
+    lv_obj_set_size(roller_vertical_div, ROLLER_X, ROLLER_Y);
+    lv_obj_set_pos(roller_vertical_div, CHART_LEFT + CHART_X + DIV_LARGE, 600-(DIV_LITTLE + ROLLER_Y));
+    lv_roller_set_visible_row_count(roller_vertical_div, 3);
+    lv_roller_set_selected(roller_vertical_div, 2, LV_ANIM_OFF);
+    lv_obj_set_event_cb(roller_vertical_div, vertical_roller_event_handler);
+
+    // horizenal division
+    roller_horizenal_div = lv_roller_create(lv_scr_act(), NULL);
+    lv_roller_set_options(roller_horizenal_div,
+            			"0.1us/div              \n"
+            			"0.2us/div              \n"
+            			"0.5us/div              \n"
+                        "1us/div              \n"
+                        "2.5us/div            \n"
+    					"5us/div              \n"
+            			"10us/div             \n"
+            			"25us/div             \n"
+                        "50us/div             ",
+						LV_ROLLER_MODE_NORMAL);
+    lv_obj_set_size(roller_horizenal_div, ROLLER_X, ROLLER_Y);
+    lv_obj_set_pos(roller_horizenal_div, CHART_LEFT + CHART_X + DIV_LARGE + DIV_LARGE + ROLLER_X, 600-(DIV_LITTLE + ROLLER_Y));
+    lv_roller_set_visible_row_count(roller_horizenal_div, 3);
+    lv_obj_set_event_cb(roller_horizenal_div, horizonal_roller_event_handler);
+
+    // Table for displaying measurements
+    table = lv_table_create(lv_scr_act(), NULL);
+    lv_obj_set_pos(table, CHART_LEFT + CHART_X + DIV_LARGE + TABLE_BIAS, TABLE_TOP);
+    lv_table_set_style(table, LV_TABLE_STYLE_CELL1, &style_normal_cell);
+    lv_table_set_style(table, LV_TABLE_STYLE_CELL2, &style_header_cell);
+    lv_table_set_style(table, LV_TABLE_STYLE_BG, &lv_style_transp_tight);
+    lv_table_set_col_cnt(table, 2);
+    lv_table_set_row_cnt(table, 11);
+
+    /*Make the cells of the first row center aligned */
+    lv_table_set_cell_align(table, 0, 0, LV_LABEL_ALIGN_CENTER);
+    lv_table_set_cell_align(table, 0, 1, LV_LABEL_ALIGN_CENTER);
+
+    /*Make the cells of the first row TYPE = 2 (use `style_cell2`) */
+    lv_table_set_cell_type(table, 0, 0, 2);
+    lv_table_set_cell_type(table, 0, 1, 2);
+
+    /*Fill the first column*/
+    lv_table_set_cell_value(table, 0, 0, "Parameters");
+    lv_table_set_cell_value(table, 1, 0, "Vp-p(V)");
+    lv_table_set_cell_value(table, 2, 0, "Vrms(V)");
+    lv_table_set_cell_value(table, 3, 0, "Vave(V)");
+    lv_table_set_cell_value(table, 4, 0, "f(kHz)");
+    lv_table_set_cell_value(table, 5, 0, "V-A(V)");
+    lv_table_set_cell_value(table, 6, 0, "V-B(V)");
+    lv_table_set_cell_value(table, 7, 0, "H-A(us)");
+    lv_table_set_cell_value(table, 8, 0, "H-B(us)");
+    lv_table_set_cell_value(table, 9, 0, "VA-VB(V)");
+    lv_table_set_cell_value(table, 10, 0, "HA-HB(us)");
+
+    /*Fill the second column*/
+    lv_table_set_cell_value(table, 0, 1, "CH1");
+    lv_table_set_cell_value(table, 1, 1, "0.000");
+    lv_table_set_cell_value(table, 2, 1, "0.000");
+    lv_table_set_cell_value(table, 3, 1, "0.000");
+    lv_table_set_cell_value(table, 4, 1, "0.000");
+    lv_table_set_cell_value(table, 5, 1, "0.000");
+    lv_table_set_cell_value(table, 6, 1, "0.000");
+    lv_table_set_cell_value(table, 7, 1, "0.000");
+    lv_table_set_cell_value(table, 8, 1, "0.000");
+    lv_table_set_cell_value(table, 9, 1, "0.000");
+    lv_table_set_cell_value(table, 10, 1, "0.000");
+
+    /*Update the data every 500ms*/
+    static uint32_t user_data = 10;
+    lv_task_t * update_task = lv_task_create(update_osc_task, 500, LV_TASK_PRIO_HIGH, &user_data);
+    lv_task_ready(update_task);
+}
+
+/*******************UI********************/
+

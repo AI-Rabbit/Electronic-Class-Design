@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="false" key="isRegEx"/>
+		<item value="CH1" key="selection"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="true" key="wrap"/>
+		<item value="false" key="wholeword"/>
+		<list key="findhistory">
+			<item value="CH1"/>
+			<item value="vertical_mode"/>
+			<item value="reg8"/>
+			<item value="osc"/>
+			<item value="points_array_channel2"/>
+			<item value="Clock is not"/>
+			<item value="ADCMIX_RxBufferPtr"/>
+			<item value="GPIO"/>
+		</list>
+		<list key="replacehistory">
+			<item value="0xC0"/>
+			<item value="window_4"/>
+			<item value="window_5"/>
+			<item value="gpio_output_state"/>
+			<item value="touch_y"/>
+			<item value="touch_x"/>
+			<item value="u32"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="300" key="DIALOG_WIDTH"/>
+		<item value="1|Microsoft YaHei UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Microsoft YaHei UI" key="DIALOG_FONT_NAME"/>
+		<item value="410" key="DIALOG_HEIGHT"/>
+		<item value="1313" key="DIALOG_X_ORIGIN"/>
+		<item value="123" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

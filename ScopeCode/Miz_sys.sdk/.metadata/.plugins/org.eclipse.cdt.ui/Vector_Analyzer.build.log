@@ -1,0 +1,68 @@
+11:04:31 **** Build of configuration Debug for project Vector_Analyzer ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+ 
+Building file: ../src/TASK_TIMER/timer_intr.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/TASK_TIMER/timer_intr.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/TASK_TIMER/timer_intr.d" -MT"src/TASK_TIMER/timer_intr.o" -o "src/TASK_TIMER/timer_intr.o" "../src/TASK_TIMER/timer_intr.c"
+Finished building: ../src/TASK_TIMER/timer_intr.c
+ 
+Building file: ../src/SYS/sys_intr.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/SYS/sys_intr.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/SYS/sys_intr.d" -MT"src/SYS/sys_intr.o" -o "src/SYS/sys_intr.o" "../src/SYS/sys_intr.c"
+Finished building: ../src/SYS/sys_intr.c
+ 
+Building file: ../src/LCD/pwm_config.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/LCD/pwm_config.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/LCD/pwm_config.d" -MT"src/LCD/pwm_config.o" -o "src/LCD/pwm_config.o" "../src/LCD/pwm_config.c"
+Finished building: ../src/LCD/pwm_config.c
+ 
+Building file: ../src/LCD/vdma_config.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/LCD/vdma_config.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/LCD/vdma_config.d" -MT"src/LCD/vdma_config.o" -o "src/LCD/vdma_config.o" "../src/LCD/vdma_config.c"
+Finished building: ../src/LCD/vdma_config.c
+ 
+Building file: ../src/LCD/vtc_config.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/LCD/vtc_config.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/LCD/vtc_config.d" -MT"src/LCD/vtc_config.o" -o "src/LCD/vtc_config.o" "../src/LCD/vtc_config.c"
+Finished building: ../src/LCD/vtc_config.c
+ 
+Building file: ../src/IIC/iic_intr.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/IIC/iic_intr.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/IIC/iic_intr.d" -MT"src/IIC/iic_intr.o" -o "src/IIC/iic_intr.o" "../src/IIC/iic_intr.c"
+Finished building: ../src/IIC/iic_intr.c
+ 
+Building file: ../src/GUI/gui_window.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/GUI/gui_window.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/GUI/gui_window.d" -MT"src/GUI/gui_window.o" -o "src/GUI/gui_window.o" "../src/GUI/gui_window.c"
+Finished building: ../src/GUI/gui_window.c
+ 
+Building file: ../src/GPIO/gpiopl_intr.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/GPIO/gpiopl_intr.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/GPIO/gpiopl_intr.d" -MT"src/GPIO/gpiopl_intr.o" -o "src/GPIO/gpiopl_intr.o" "../src/GPIO/gpiopl_intr.c"
+Finished building: ../src/GPIO/gpiopl_intr.c
+ 
+Building file: ../src/CLK_WIZARD/clk_wizard_config.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/CLK_WIZARD/clk_wizard_config.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/CLK_WIZARD/clk_wizard_config.d" -MT"src/CLK_WIZARD/clk_wizard_config.o" -o "src/CLK_WIZARD/clk_wizard_config.o" "../src/CLK_WIZARD/clk_wizard_config.c"
+Finished building: ../src/CLK_WIZARD/clk_wizard_config.c
+ 
+Building file: ../src/main.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../Vector_Analyzer_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+Finished building: ../src/main.c
+ 
+Building target: Vector_Analyzer.elf
+Invoking: ARM v7 gcc linker
+arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -L../../Vector_Analyzer_bsp/ps7_cortexa9_0/lib -o "Vector_Analyzer.elf"  ./src/TASK_TIMER/timer_intr.o  ./src/SYS/sys_intr.o  ./src/LCD/pwm_config.o ./src/LCD/vdma_config.o ./src/LCD/vtc_config.o  ./src/IIC/iic_intr.o  ./src/GUI/gui_window.o ./src/GUI/ugui.o  ./src/GPIO/gpiopl_intr.o  ./src/CLK_WIZARD/clk_wizard_config.o  ./src/main.o   -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
+Finished building target: Vector_Analyzer.elf
+ 
+Invoking: ARM v7 Print Size
+arm-none-eabi-size Vector_Analyzer.elf  |tee "Vector_Analyzer.elf.size"
+   text	   data	    bss	    dec	    hex	filename
+ 337748	   2712	  26720	 367180	  59a4c	Vector_Analyzer.elf
+Finished building: Vector_Analyzer.elf.size
+ 
+
+11:04:33 Build Finished (took 1s.270ms)
+

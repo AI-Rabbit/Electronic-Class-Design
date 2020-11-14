@@ -1,0 +1,20 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Sat Oct 24 18:09:38 2020
+# Process ID: 6044
+# Current directory: F:/Project/Scope
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent11528 F:\Project\Scope\Miz_sys.xpr
+# Log file: F:/Project/Scope/vivado.log
+# Journal file: F:/Project/Scope\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project F:/Project/Scope/Miz_sys.xpr
+update_compile_order -fileset sources_1
+open_hw
+open_bd_design {F:/Project/Scope/Miz_sys.srcs/sources_1/bd/system/system.bd}
+launch_sdk -workspace F:/Project/Scope/Miz_sys.sdk -hwspec F:/Project/Scope/Miz_sys.sdk/system_wrapper.hdf
+file copy -force F:/Project/Scope/Miz_sys.runs/impl_1/system_wrapper.sysdef F:/Project/Scope/Miz_sys.sdk/system_wrapper.hdf
+
+launch_sdk -workspace F:/Project/Scope/Miz_sys.sdk -hwspec F:/Project/Scope/Miz_sys.sdk/system_wrapper.hdf

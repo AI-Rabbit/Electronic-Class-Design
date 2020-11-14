@@ -1,0 +1,91 @@
+{
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.0.19  2019-03-26 bk=1.5019 VDI=41 GEI=35 GUI=JA:9.0 non-TLS
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -lvl 6 -x 2140 -y 150 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -lvl 6 -x 2140 -y 170 -defaultsOSRD
+preplace port gpio_rtl -pg 1 -lvl 6 -x 2140 -y 970 -defaultsOSRD
+preplace port lcd_iic -pg 1 -lvl 6 -x 2140 -y 190 -defaultsOSRD
+preplace port lcd_clk -pg 1 -lvl 6 -x 2140 -y 740 -defaultsOSRD
+preplace port lcd_hs -pg 1 -lvl 6 -x 2140 -y 540 -defaultsOSRD
+preplace port lcd_vs -pg 1 -lvl 6 -x 2140 -y 560 -defaultsOSRD
+preplace port lcd_de -pg 1 -lvl 6 -x 2140 -y 500 -defaultsOSRD
+preplace port sclka_0 -pg 1 -lvl 6 -x 2140 -y 1310 -defaultsOSRD
+preplace port sclkb_0 -pg 1 -lvl 6 -x 2140 -y 1330 -defaultsOSRD
+preplace portBus lcd_data -pg 1 -lvl 6 -x 2140 -y 520 -defaultsOSRD
+preplace portBus lcd_pwm -pg 1 -lvl 6 -x 2140 -y 1140 -defaultsOSRD
+preplace portBus dch1_in_0 -pg 1 -lvl 0 -x 0 -y 1300 -defaultsOSRD
+preplace portBus switch_ch1_0 -pg 1 -lvl 6 -x 2140 -y 1350 -defaultsOSRD
+preplace portBus switch_ch2_0 -pg 1 -lvl 6 -x 2140 -y 1370 -defaultsOSRD
+preplace portBus dch2_in_0 -pg 1 -lvl 0 -x 0 -y 1320 -defaultsOSRD
+preplace inst PWM_0 -pg 1 -lvl 5 -x 1870 -y 1140 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 5 -x 1870 -y 200 -defaultsOSRD
+preplace inst util_vector_logic_0 -pg 1 -lvl 4 -x 1380 -y 390 -defaultsOSRD
+preplace inst rst_processing_system7_0_50M -pg 1 -lvl 1 -x 200 -y 580 -defaultsOSRD
+preplace inst v_axi4s_vid_out_0 -pg 1 -lvl 5 -x 1870 -y 580 -defaultsOSRD
+preplace inst v_tc_0 -pg 1 -lvl 4 -x 1380 -y 590 -defaultsOSRD
+preplace inst osc_0 -pg 1 -lvl 5 -x 1870 -y 1320 -defaultsOSRD
+preplace inst axi_dma_0 -pg 1 -lvl 3 -x 930 -y 790 -defaultsOSRD
+preplace inst axi_gpio_0 -pg 1 -lvl 5 -x 1870 -y 980 -defaultsOSRD
+preplace inst axi_smc -pg 1 -lvl 4 -x 1380 -y 90 -defaultsOSRD
+preplace inst axi_vdma_0 -pg 1 -lvl 3 -x 930 -y 420 -defaultsOSRD
+preplace inst axis_subset_converter_0 -pg 1 -lvl 4 -x 1380 -y 240 -defaultsOSRD
+preplace inst clk_wiz_0 -pg 1 -lvl 4 -x 1380 -y 820 -defaultsOSRD
+preplace inst fifo_generator_0 -pg 1 -lvl 4 -x 1380 -y 1160 -defaultsOSRD
+preplace inst processing_system7_0_axi_periph -pg 1 -lvl 2 -x 540 -y 710 -defaultsOSRD
+preplace inst xlconcat_0 -pg 1 -lvl 4 -x 1380 -y 960 -defaultsOSRD
+preplace inst xlconstant_0 -pg 1 -lvl 3 -x 930 -y 600 -defaultsOSRD
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 6 30 480 370 450 750 540 1150 450 1600 310 2100
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 6 20 470 NJ 470 740J 520 1140J 330 NJ 330 2110
+preplace netloc rst_processing_system7_0_50M_peripheral_aresetn 1 1 4 380 460 730 660 1160 1050 1630
+preplace netloc rst_processing_system7_0_50M_interconnect_aresetn 1 1 1 390 570n
+preplace netloc clk_wiz_0_clk_out2 1 3 3 1200 730 1590 740 NJ
+preplace netloc clk_wiz_0_locked 1 3 2 1180 740 1580
+preplace netloc v_axi4s_vid_out_0_vtg_ce 1 3 3 1190 750 NJ 750 2100
+preplace netloc v_axi4s_vid_out_0_vid_data 1 5 1 NJ 520
+preplace netloc v_axi4s_vid_out_0_vid_hsync 1 5 1 NJ 540
+preplace netloc v_axi4s_vid_out_0_vid_vsync 1 5 1 NJ 560
+preplace netloc vid_io_in_reset_1 1 4 1 1610J 390n
+preplace netloc axi_vdma_0_mm2s_introut 1 3 1 1130 450n
+preplace netloc axi_gpio_0_ip2intc_irpt 1 3 3 1200 1030 1610J 900 2100
+preplace netloc xlconcat_0_dout 1 4 1 1570 240n
+preplace netloc PWM_0_pwm 1 5 1 NJ 1140
+preplace netloc xlconstant_0_dout 1 3 1 1170J 590n
+preplace netloc v_axi4s_vid_out_0_vid_active_video 1 5 1 NJ 500
+preplace netloc osc_0_sclka 1 5 1 NJ 1310
+preplace netloc dch1_in_0_1 1 0 5 NJ 1300 NJ 1300 NJ 1300 NJ 1300 NJ
+preplace netloc osc_0_switch_ch1 1 5 1 NJ 1350
+preplace netloc osc_0_switch_ch2 1 5 1 NJ 1370
+preplace netloc osc_0_sclkb 1 5 1 NJ 1330
+preplace netloc dch2_in_0_1 1 0 5 NJ 1320 NJ 1320 NJ 1320 NJ 1320 NJ
+preplace netloc fifo_generator_0_axis_data_count 1 4 1 1560 1190n
+preplace netloc processing_system7_0_axi_periph_M01_AXI 1 2 3 710 1040 NJ 1040 1620J
+preplace netloc processing_system7_0_DDR 1 5 1 NJ 150
+preplace netloc axi_vdma_0_M_AXI_MM2S 1 3 1 1100 60n
+preplace netloc osc_0_dma_master 1 2 4 760 890 NJ 890 NJ 890 2110
+preplace netloc fifo_generator_0_M_AXIS 1 4 1 1580 1130n
+preplace netloc osc_0_fifo_master 1 3 3 1200 1070 1640J 1060 2100
+preplace netloc processing_system7_0_axi_periph_M04_AXI 1 2 3 690 1260 NJ 1260 NJ
+preplace netloc axi_dma_0_M_AXI_S2MM 1 3 1 1120 80n
+preplace netloc processing_system7_0_axi_periph_M05_AXI 1 2 1 N 750
+preplace netloc axis_subset_converter_0_M_AXIS 1 4 1 1560 240n
+preplace netloc processing_system7_0_axi_periph_M02_AXI 1 2 3 700 1060 NJ 1060 1570J
+preplace netloc processing_system7_0_IIC_0 1 5 1 NJ 190
+preplace netloc v_tc_0_vtiming_out 1 4 1 1560 520n
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 5 390 320 NJ 320 NJ 320 NJ 320 2120
+preplace netloc axi_smc_M00_AXI 1 4 1 1560 90n
+preplace netloc processing_system7_0_axi_periph_M03_AXI 1 2 2 720 530 1170J
+preplace netloc axi_vdma_0_M_AXIS_MM2S 1 3 1 1110 220n
+preplace netloc processing_system7_0_FIXED_IO 1 5 1 NJ 170
+preplace netloc axi_gpio_0_GPIO 1 5 1 NJ 970
+preplace netloc processing_system7_0_axi_periph_M00_AXI 1 2 1 700 380n
+levelinfo -pg 1 0 200 540 930 1380 1870 2140
+pagesize -pg 1 -db -bbox -sgen -150 0 2310 1430
+"
+}
+{
+   "da_axi4_cnt":"23",
+   "da_board_cnt":"3",
+   "da_clkrst_cnt":"2",
+   "da_ps7_cnt":"1"
+}

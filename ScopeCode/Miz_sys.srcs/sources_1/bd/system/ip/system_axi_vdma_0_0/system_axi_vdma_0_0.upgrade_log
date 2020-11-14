@@ -1,0 +1,91 @@
+Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2015.4 (win64) Build 1412921 Wed Nov 18 09:43:45 MST 2015
+| Date         : Thu Mar 09 15:18:43 2017
+| Host         : 201607062058-PC running 64-bit Service Pack 1  (build 7601)
+| Command      : upgrade_ip
+| Device       : xc7z010clg400-1
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'system_axi_vdma_0_0'
+
+1. Summary
+----------
+
+CAUTION (success, with warnings) in the update of system_axi_vdma_0_0 (xilinx.com:ip:axi_vdma:6.2 (Rev. 6)) to current project options.
+
+After upgrade, an IP may have parameter differences compared to the original customization. Please review the parameters within the IP customization GUI to ensure proper functionality.
+
+2. Customization warnings
+-------------------------
+
+WARNING: An attempt to modify the value of disabled parameter 'c_s2mm_max_burst_length' from '8' to '64' has been ignored for IP '/axi_vdma_0'
+
+
+3. Debug Commands
+-----------------
+
+  The following debug information can be passed to Vivado as Tcl commands,
+in order to validate or debug the output of the upgrade flow.
+  Please consult the warnings from the previous sections, and alter or remove
+the configuration parameter(s) which caused the warning; then execute the Tcl
+commands, and use the IP Customization GUI to verify the IP configuration.
+
+create_ip -vlnv xilinx.com:ip:axi_vdma:6.2 -user_name system_axi_vdma_0_0
+set_property -dict "\
+  CONFIG.Component_Name system_axi_vdma_0_0 \
+  CONFIG.c_addr_width 32 \
+  CONFIG.c_dlytmr_resolution 125 \
+  CONFIG.c_dynamic_resolution 1 \
+  CONFIG.c_enable_debug_all 0 \
+  CONFIG.c_enable_debug_info_0 0 \
+  CONFIG.c_enable_debug_info_1 0 \
+  CONFIG.c_enable_debug_info_10 0 \
+  CONFIG.c_enable_debug_info_11 0 \
+  CONFIG.c_enable_debug_info_12 0 \
+  CONFIG.c_enable_debug_info_13 0 \
+  CONFIG.c_enable_debug_info_14 1 \
+  CONFIG.c_enable_debug_info_15 1 \
+  CONFIG.c_enable_debug_info_2 0 \
+  CONFIG.c_enable_debug_info_3 0 \
+  CONFIG.c_enable_debug_info_4 0 \
+  CONFIG.c_enable_debug_info_5 0 \
+  CONFIG.c_enable_debug_info_6 1 \
+  CONFIG.c_enable_debug_info_7 1 \
+  CONFIG.c_enable_debug_info_8 0 \
+  CONFIG.c_enable_debug_info_9 0 \
+  CONFIG.c_enable_vidprmtr_reads 1 \
+  CONFIG.c_flush_on_fsync 1 \
+  CONFIG.c_include_internal_genlock 1 \
+  CONFIG.c_include_mm2s 1 \
+  CONFIG.c_include_mm2s_dre 0 \
+  CONFIG.c_include_mm2s_sf 0 \
+  CONFIG.c_include_s2mm 0 \
+  CONFIG.c_include_s2mm_dre 0 \
+  CONFIG.c_include_s2mm_sf 1 \
+  CONFIG.c_include_sg 0 \
+  CONFIG.c_m_axi_mm2s_data_width 64 \
+  CONFIG.c_m_axi_s2mm_data_width 64 \
+  CONFIG.c_m_axis_mm2s_tdata_width 32 \
+  CONFIG.c_mm2s_genlock_mode 0 \
+  CONFIG.c_mm2s_genlock_num_masters 1 \
+  CONFIG.c_mm2s_genlock_repeat_en 0 \
+  CONFIG.c_mm2s_linebuffer_depth 2048 \
+  CONFIG.c_mm2s_linebuffer_thresh 4 \
+  CONFIG.c_mm2s_max_burst_length 32 \
+  CONFIG.c_mm2s_sof_enable 1 \
+  CONFIG.c_num_fstores 1 \
+  CONFIG.c_prmry_is_aclk_async 0 \
+  CONFIG.c_s2mm_genlock_mode 0 \
+  CONFIG.c_s2mm_genlock_num_masters 1 \
+  CONFIG.c_s2mm_genlock_repeat_en 1 \
+  CONFIG.c_s2mm_linebuffer_depth 512 \
+  CONFIG.c_s2mm_linebuffer_thresh 4 \
+  CONFIG.c_s2mm_max_burst_length 64 \
+  CONFIG.c_s2mm_sof_enable 1 \
+  CONFIG.c_s_axis_s2mm_tdata_width 32 \
+  CONFIG.c_use_fsync 1 \
+  CONFIG.c_use_mm2s_fsync 0 \
+  CONFIG.c_use_s2mm_fsync 2 " [get_ips system_axi_vdma_0_0]
+
+

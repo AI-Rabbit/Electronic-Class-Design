@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;vdma_mini_gui/src/clk_wizard.config.h&apos;" deleteContents="false" description="Delete resource &apos;vdma_mini_gui/src/clk_wizard.config.h&apos;" element1="/vdma_mini_gui/src/clk_wizard.config.h" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1488186026506"/>
+</session>

@@ -1,0 +1,75 @@
+10:12:03 **** Auto Build of configuration Debug for project vdma_lcd ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+ 
+Building file: ../src/gpiopl_intr.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/gpiopl_intr.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/gpiopl_intr.d" -MT"src/gpiopl_intr.o" -o "src/gpiopl_intr.o" "../src/gpiopl_intr.c"
+Finished building: ../src/gpiopl_intr.c
+ 
+Building file: ../src/gui_window.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/gui_window.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/gui_window.d" -MT"src/gui_window.o" -o "src/gui_window.o" "../src/gui_window.c"
+Finished building: ../src/gui_window.c
+ 
+Building file: ../src/iic_intr.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/iic_intr.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/iic_intr.d" -MT"src/iic_intr.o" -o "src/iic_intr.o" "../src/iic_intr.c"
+Finished building: ../src/iic_intr.c
+ 
+Building file: ../src/main.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+../src/main.c: In function 'main':
+../src/main.c:80:2: warning: this 'while' clause does not guard... [-Wmisleading-indentation]
+  while (1) ;
+  ^~~~~
+../src/main.c:81:3: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'while'
+   return XST_SUCCESS;
+   ^~~~~~
+Finished building: ../src/main.c
+ 
+Building file: ../src/pwm_config.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/pwm_config.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/pwm_config.d" -MT"src/pwm_config.o" -o "src/pwm_config.o" "../src/pwm_config.c"
+Finished building: ../src/pwm_config.c
+ 
+Building file: ../src/sys_intr.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/sys_intr.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/sys_intr.d" -MT"src/sys_intr.o" -o "src/sys_intr.o" "../src/sys_intr.c"
+Finished building: ../src/sys_intr.c
+ 
+Building file: ../src/timer_intr.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/timer_intr.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/timer_intr.d" -MT"src/timer_intr.o" -o "src/timer_intr.o" "../src/timer_intr.c"
+Finished building: ../src/timer_intr.c
+ 
+Building file: ../src/ugui.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/ugui.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/ugui.d" -MT"src/ugui.o" -o "src/ugui.o" "../src/ugui.c"
+Finished building: ../src/ugui.c
+ 
+Building file: ../src/vdma_config.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/vdma_config.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/vdma_config.d" -MT"src/vdma_config.o" -o "src/vdma_config.o" "../src/vdma_config.c"
+Finished building: ../src/vdma_config.c
+ 
+Building file: ../src/vtc_config.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/vtc_config.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/vtc_config.d" -MT"src/vtc_config.o" -o "src/vtc_config.o" "../src/vtc_config.c"
+Finished building: ../src/vtc_config.c
+ 
+Building target: vdma_lcd.elf
+Invoking: ARM v7 gcc linker
+arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -L../../vdma_lcd_bsp/ps7_cortexa9_0/lib -o "vdma_lcd.elf"  ./src/clk_wizard_config.o ./src/gpiopl_intr.o ./src/gui_window.o ./src/iic_intr.o ./src/main.o ./src/pwm_config.o ./src/sys_intr.o ./src/timer_intr.o ./src/ugui.o ./src/vdma_config.o ./src/vtc_config.o   -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
+Finished building target: vdma_lcd.elf
+ 
+Invoking: ARM v7 Print Size
+arm-none-eabi-size vdma_lcd.elf  |tee "vdma_lcd.elf.size"
+   text	   data	    bss	    dec	    hex	filename
+ 346356	   2712	  29120	 378188	  5c54c	vdma_lcd.elf
+Finished building: vdma_lcd.elf.size
+ 
+
+10:12:05 Build Finished (took 1s.518ms)
+

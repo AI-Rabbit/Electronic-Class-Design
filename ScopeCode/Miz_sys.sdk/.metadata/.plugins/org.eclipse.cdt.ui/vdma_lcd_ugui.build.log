@@ -1,0 +1,23 @@
+09:53:54 **** Auto Build of configuration Debug for project vdma_lcd_ugui ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+ 
+Building file: ../src/clk_wizard_config.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/clk_wizard_config.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_ugui_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/clk_wizard_config.d" -MT"src/clk_wizard_config.o" -o "src/clk_wizard_config.o" "../src/clk_wizard_config.c"
+Finished building: ../src/clk_wizard_config.c
+ 
+Building file: ../src/gpiopl_intr.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/gpiopl_intr.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../vdma_lcd_ugui_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/gpiopl_intr.d" -MT"src/gpiopl_intr.o" -o "src/gpiopl_intr.o" "../src/gpiopl_intr.c"
+In file included from ../src/gpiopl_intr.h:21:0,
+                 from ../src/gpiopl_intr.c:10:
+../src/timer_intr.h:15:10: fatal error: Xil_exception.h: No such file or directory
+src/subdir.mk:51: recipe for target 'src/gpiopl_intr.o' failed
+ #include "Xil_exception.h"
+          ^~~~~~~~~~~~~~~~~
+compilation terminated.
+make: *** [src/gpiopl_intr.o] Error 1
+
+09:53:55 Build Finished (took 559ms)
+
